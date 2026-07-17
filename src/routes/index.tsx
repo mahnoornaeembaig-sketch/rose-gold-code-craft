@@ -190,15 +190,21 @@ const approvedTestimonials: Testimonial[] = [
   },
 ];
 
-const skills = ["C", "C++", "Python", "SQL", "Object-Oriented Programming", "Data Structures"];
-
 function Index() {
   const [sent, setSent] = useState(false);
+  const [reviewSent, setReviewSent] = useState(false);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSent(true);
     setTimeout(() => setSent(false), 4000);
+    (e.currentTarget as HTMLFormElement).reset();
+  }
+
+  function onReviewSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setReviewSent(true);
+    setTimeout(() => setReviewSent(false), 4500);
     (e.currentTarget as HTMLFormElement).reset();
   }
 

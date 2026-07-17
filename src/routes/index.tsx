@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -171,28 +172,46 @@ const projects: Project[] = [
 
 const skills = ["C", "C++", "Python", "SQL", "Object-Oriented Programming", "Data Structures"];
 
-type Testimonial = { name: string; role: string; quote: string; project?: string };
-
-const approvedTestimonials: Testimonial[] = [
-  {
-    name: "The Cheesecake Method",
-    role: "Client — Small Business Owner",
-    quote:
-      "Mahnoor delivered a polished, responsive site end-to-end. Communication was clear, revisions were quick, and the final result exceeded what I imagined.",
-    project: "The Cheesecake Method",
-  },
-  {
-    name: "Course Instructor",
-    role: "NED University",
-    quote:
-      "Her systems projects show real command of data structures and OOP — clean code, thoughtful architecture, and dependable delivery.",
-    project: "Library & Flight Systems",
-  },
-];
-
 function Index() {
   const [sent, setSent] = useState(false);
-  const [reviewSent, setReviewSent] = useState(false);
+
+  // --- Supabase States ---
+  const [session, setSession] = useState<any>(null);
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
+
+  // Restore session on load + listen for auth changes
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // --- Fetch Approved Reviews ---
+  const [approvedReviews, setApprovedReviews] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const { data, error } = await supabase
+        .from('client_reviews')
+        .select('*')
+        .eq('is_approved', true); // Only fetch the ones you set to 'true'
+      if (error) {
+        console.error('Error fetching reviews:', error);
+      } else {
+        setApprovedReviews(data || []);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -201,11 +220,72 @@ function Index() {
     (e.currentTarget as HTMLFormElement).reset();
   }
 
-  function onReviewSubmit(e: FormEvent<HTMLFormElement>) {
+  // --- Handle Client Login ---
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setReviewSent(true);
-    setTimeout(() => setReviewSent(false), 4500);
-    (e.currentTarget as HTMLFormElement).reset();
+    setStatusMessage('Authenticating...');
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: authEmail,
+      password: authPassword,
+    });
+
+    if (error) {
+      setStatusMessage(`Error: ${error.message}`);
+    } else {
+      setSession(data.session);
+      setStatusMessage(''); // Clear message on success
+    }
+  };
+
+  // --- Handle Google OAuth Login ---
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        // This sends the user back to your site after login
+        redirectTo: window.location.origin,
+      },
+    });
+    if (error) {
+      setStatusMessage(`Error: ${error.message}`);
+    }
+  };
+
+  // --- Handle Client Logout ---
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+    setStatusMessage('');
+  };
+
+  // --- Handle Review Submission ---
+  async function onReviewSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatusMessage('Submitting review...');
+
+    // Grab the values directly from the HTML form inputs
+    const formData = new FormData(e.currentTarget);
+    const clientName = formData.get("reviewer-name") as string;
+    const projectName = formData.get("review-project") as string;
+    const reviewText = formData.get("review-message") as string;
+
+    const { error } = await supabase
+      .from('client_reviews')
+      .insert([
+        {
+          client_name: clientName,
+          project_name: projectName,
+          review_text: reviewText,
+          is_approved: false
+        }
+      ]);
+
+    if (error) {
+      setStatusMessage(`Error: ${error.message}`);
+    } else {
+      setStatusMessage('✦ thank you — your review is pending approval');
+      (e.currentTarget as HTMLFormElement).reset();
+    }
   }
 
   return (
@@ -504,43 +584,48 @@ function Index() {
             </p>
           </div>
 
-          {/* Approved testimonials grid */}
+          {/* Approved testimonials grid — live from Supabase */}
           <div className="mt-14 grid gap-6 md:grid-cols-2">
-            {approvedTestimonials.map((t) => (
-              <figure
-                key={t.name}
-                className="glass cta-glow relative flex flex-col rounded-3xl p-8"
-              >
-                <span
-                  aria-hidden
-                  className="absolute left-6 top-4 font-serif text-6xl leading-none text-primary/40"
+            {approvedReviews.length === 0 ? (
+              <p className="col-span-full text-center font-serif italic text-sm text-parchment/60">
+                No approved reviews yet — check back soon.
+              </p>
+            ) : (
+              approvedReviews.map((t) => (
+                <figure
+                  key={t.id}
+                  className="glass cta-glow relative flex flex-col rounded-3xl p-8"
                 >
-                  “
-                </span>
-                <blockquote className="mt-6 font-serif text-base italic leading-relaxed text-parchment/85 md:text-lg">
-                  {t.quote}
-                </blockquote>
-                <figcaption className="mt-6 flex items-center gap-4 border-t border-primary/25 pt-4">
                   <span
-                    className="grid h-10 w-10 place-items-center rounded-full font-serif text-sm"
-                    style={{
-                      background: "linear-gradient(135deg, var(--velvet-rose), var(--royal-gold))",
-                      color: "#FFFFFF",
-                    }}
                     aria-hidden
+                    className="absolute left-6 top-4 font-serif text-6xl leading-none text-primary/40"
                   >
-                    {t.name.charAt(0)}
+                    "
                   </span>
-                  <div>
-                    <div className="font-serif text-base font-medium">{t.name}</div>
-                    <div className="text-[10px] uppercase tracking-[0.28em] text-parchment/60">
-                      {t.role}
-                      {t.project ? ` · ${t.project}` : ""}
+                  <blockquote className="mt-6 font-serif text-base italic leading-relaxed text-parchment/85 md:text-lg">
+                    {t.review_text}
+                  </blockquote>
+                  <figcaption className="mt-6 flex items-center gap-4 border-t border-primary/25 pt-4">
+                    <span
+                      className="grid h-10 w-10 place-items-center rounded-full font-serif text-sm"
+                      style={{
+                        background: "linear-gradient(135deg, var(--velvet-rose), var(--royal-gold))",
+                        color: "#FFFFFF",
+                      }}
+                      aria-hidden
+                    >
+                      {t.client_name?.charAt(0) ?? "?"}
+                    </span>
+                    <div>
+                      <div className="font-serif text-base font-medium">{t.client_name}</div>
+                      <div className="text-[10px] uppercase tracking-[0.28em] text-parchment/60">
+                        {t.project_name}
+                      </div>
                     </div>
-                  </div>
-                </figcaption>
-              </figure>
-            ))}
+                  </figcaption>
+                </figure>
+              ))
+            )}
           </div>
 
           {/* Submit-a-review form */}
@@ -555,96 +640,139 @@ function Index() {
                 <li>· Include the project we worked on</li>
                 <li>· Approval usually within a few days</li>
               </ul>
+              {session && (
+                <button
+                  onClick={handleLogout}
+                  className="mt-6 text-[10px] uppercase tracking-[0.28em] text-parchment/60 hover:text-primary underline"
+                >
+                  Log out
+                </button>
+              )}
             </div>
 
-            <form
-              onSubmit={onReviewSubmit}
-              className="glass rounded-3xl p-8 lg:col-span-8"
-              aria-label="Submit a client review"
-            >
-              <div className="grid gap-5 md:grid-cols-2">
-                <label className="block">
-                  <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
-                    Your name
-                  </span>
+            {!session ? (
+              <div className="glass rounded-3xl p-8 lg:col-span-8 flex flex-col justify-center items-center">
+                <div className="font-script text-3xl text-primary mb-6">Secure Client Login</div>
+                <form onSubmit={handleLogin} className="w-full max-w-md space-y-4">
                   <input
-                    required
-                    name="reviewer-name"
-                    maxLength={100}
+                    type="email"
+                    placeholder="Client Email"
+                    value={authEmail}
+                    onChange={(e) => setAuthEmail(e.target.value)}
                     className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
                     style={{ color: "var(--charcoal)" }}
+                    required
                   />
-                </label>
-                <label className="block">
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
+                    style={{ color: "var(--charcoal)" }}
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="cta-glow w-full rounded-full px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-[#2E0202] mt-4"
+                    style={{ background: "linear-gradient(135deg, #E8CB8A 0%, var(--royal-gold) 100%)" }}
+                  >
+                    Access Portal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleGoogleLogin}
+                    className="w-full rounded-full border border-primary/40 bg-white/5 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-parchment hover:bg-white/10 mt-2 transition-all"
+                  >
+                    Sign in with Google
+                  </button>
+                </form>
+                {statusMessage && <p className="mt-6 font-serif italic text-xs text-primary">{statusMessage}</p>}
+              </div>
+            ) : (
+              <form
+                onSubmit={onReviewSubmit}
+                className="glass rounded-3xl p-8 lg:col-span-8"
+                aria-label="Submit a client review"
+              >
+                <div className="grid gap-5 md:grid-cols-2">
+                  <label className="block">
+                    <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                      Your name
+                    </span>
+                    <input
+                      required
+                      name="reviewer-name"
+                      maxLength={100}
+                      className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
+                      style={{ color: "var(--charcoal)" }}
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                      Company / Role
+                    </span>
+                    <input
+                      name="reviewer-role"
+                      maxLength={120}
+                      className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
+                      style={{ color: "var(--charcoal)" }}
+                    />
+                  </label>
+                </div>
+                <label className="mt-5 block">
                   <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
-                    Company / Role
+                    Project we worked on
                   </span>
                   <input
-                    name="reviewer-role"
+                    name="review-project"
                     maxLength={120}
                     className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
                     style={{ color: "var(--charcoal)" }}
                   />
                 </label>
-              </div>
-              <label className="mt-5 block">
-                <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
-                  Project we worked on
-                </span>
-                <input
-                  name="review-project"
-                  maxLength={120}
-                  className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
-                  style={{ color: "var(--charcoal)" }}
-                />
-              </label>
-              <label className="mt-5 block">
-                <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
-                  Your review
-                </span>
-                <textarea
-                  required
-                  name="review-message"
-                  rows={5}
-                  maxLength={1000}
-                  className="w-full resize-none rounded-2xl border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
-                  style={{ color: "var(--charcoal)" }}
-                />
-              </label>
-              <label className="mt-5 flex items-start gap-3 text-xs text-parchment/80">
-                <input
-                  type="checkbox"
-                  required
-                  name="review-consent"
-                  className="mt-1 h-4 w-4 rounded border-primary/50 accent-[color:var(--velvet-rose)]"
-                />
-                <span>
-                  I consent to my name and review being displayed publicly once approved.
-                </span>
-              </label>
-              <div className="mt-6 flex items-center justify-between gap-4">
-                <span
-                  className={`font-serif italic text-xs ${
-                    reviewSent ? "text-primary" : "text-parchment/60"
-                  }`}
-                >
-                  {reviewSent
-                    ? "✦ thank you — your review is pending approval"
-                    : "reviewed with care before publishing"}
-                </span>
-                <button
-                  type="submit"
-                  className="cta-glow inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-xs uppercase tracking-[0.28em]"
-                  style={{
-                    background: "linear-gradient(135deg, var(--velvet-rose) 0%, var(--royal-gold) 100%)",
-                    color: "#FFFFFF",
-                  }}
-                >
-                  Submit Review
-                  <span aria-hidden>→</span>
-                </button>
-              </div>
-            </form>
+                <label className="mt-5 block">
+                  <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                    Your review
+                  </span>
+                  <textarea
+                    required
+                    name="review-message"
+                    rows={5}
+                    maxLength={1000}
+                    className="w-full resize-none rounded-2xl border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
+                    style={{ color: "var(--charcoal)" }}
+                  />
+                </label>
+                <label className="mt-5 flex items-start gap-3 text-xs text-parchment/80">
+                  <input
+                    type="checkbox"
+                    required
+                    name="review-consent"
+                    className="mt-1 h-4 w-4 rounded border-primary/50 accent-[color:var(--velvet-rose)]"
+                  />
+                  <span>
+                    I consent to my name and review being displayed publicly once approved.
+                  </span>
+                </label>
+                <div className="mt-6 flex items-center justify-between gap-4">
+                  <span className="font-serif italic text-xs text-primary">
+                    {statusMessage || "reviewed with care before publishing"}
+                  </span>
+                  <button
+                    type="submit"
+                    className="cta-glow inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-xs uppercase tracking-[0.28em]"
+                    style={{
+                      background: "linear-gradient(135deg, var(--velvet-rose) 0%, var(--royal-gold) 100%)",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Submit Review
+                    <span aria-hidden>→</span>
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </Section>

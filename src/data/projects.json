@@ -1,0 +1,30 @@
+[
+    {
+      "title": "The Cheesecake Method",
+      "code": "N° 01",
+      "desc": "Client-verified web experience shipped end-to-end. Structured, responsive, and deployed to production on Vercel.",
+      "url": "https://thecheesecakemethod.vercel.app/",
+      "contribution": 90,
+      "verified": true,
+      "stack": ["Web", "Frontend", "Deploy"],
+      "collaborators": ["mahnoornaeembaig-sketch"]
+    },
+    {
+      "title": "Library Management System",
+      "code": "N° 02",
+      "desc": "A C-based library management system built around clean data structures, file I/O, and menu-driven operations.",
+      "url": "https://github.com/mahnoornaeembaig-sketch/LIBRARY_MANAGEMENT_SYSTEM_C-",
+      "contribution": 100,
+      "stack": ["C", "Data Structures", "CLI"],
+      "collaborators": ["mahnoornaeembaig-sketch", "raimaahh-commits"]
+    },
+    {
+      "title": "Flight Reservation System",
+      "code": "N° 03",
+      "desc": "End-to-end reservation flow: bookings, seat allocation, and persistent records — modeled with OOP principles.",
+      "url": "https://github.com/mahnoornaeembaig-sketch/FLIGHT-RESERVATION-SYSTEM",
+      "contribution": 100,
+      "stack": ["C++", "OOP", "Systems"],
+      "collaborators": ["mahnoornaeembaig-sketch"]
+    }
+  ]

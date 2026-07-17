@@ -191,7 +191,7 @@ function Index() {
             </span>
             <span className="hidden font-script text-lg text-parchment sm:inline">Mahnoor</span>
           </a>
-          <nav className="flex items-center gap-1 text-[10px] uppercase tracking-[0.22em] text-parchment/80 md:text-[11px]">
+          <nav className="flex flex-wrap items-center gap-1 text-[10px] uppercase tracking-[0.22em] text-parchment/80 sm:gap-2 md:gap-3 md:text-[11px]">
             {[
               ["About", "#about"],
               ["Skills", "#skills"],
@@ -202,7 +202,7 @@ function Index() {
               <a
                 key={href}
                 href={href}
-                className="rounded-full px-3 py-1.5 transition-all duration-300 hover:bg-primary/20 hover:text-primary"
+                className="rounded-full px-3 py-1.5 transition-all duration-300 hover:bg-primary/20 hover:text-primary md:px-4"
               >
                 {label}
               </a>
@@ -220,22 +220,25 @@ function Index() {
         <SparkleField count={22} />
 
         <div className="relative mx-auto max-w-4xl">
-          <div className="reveal in-view glass rounded-[28px] px-8 py-14 text-center shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] md:px-16 md:py-20">
+          <div
+            className="reveal in-view glass rounded-[28px] px-6 py-14 text-center sm:px-8 md:px-16 md:py-20"
+            style={{
+              boxShadow:
+                "0 0 0 1px rgba(197,160,89,0.35), 0 0 60px -10px rgba(197,160,89,0.35), 0 30px 80px -30px rgba(0,0,0,0.7)",
+            }}
+          >
             <div className="mb-6 flex items-center justify-center gap-3 text-[10px] uppercase tracking-[0.4em] text-primary">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
               <span>Available for engineering roles</span>
             </div>
 
-            <p className="font-script text-4xl text-primary md:text-5xl" style={{ lineHeight: 1 }}>
-              Mahnoor
-            </p>
-            <h1 className="mt-2 font-serif text-6xl font-medium leading-[1.05] md:text-8xl">
-              <span className="text-gold-gradient">Naeem</span>
+            <h1 className="font-serif text-5xl font-medium leading-[1.1] tracking-wide sm:text-6xl md:text-7xl lg:text-8xl">
+              <span style={{ color: "#E8CB8A" }}>Mahnoor Naeem</span>
             </h1>
 
             <div className="mx-auto my-8 h-px w-40 gold-hairline" />
 
-            <p className="mx-auto max-w-xl font-serif text-lg italic text-parchment/85 md:text-xl">
+            <p className="mx-auto max-w-xl px-2 pb-2 font-serif text-base italic leading-relaxed text-parchment/85 sm:text-lg md:text-xl">
               Computer Engineering Student
               <span className="text-primary"> · </span>
               Aspiring Software Engineer

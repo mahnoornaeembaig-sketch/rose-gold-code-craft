@@ -135,6 +135,7 @@ type Project = {
   contribution: number;
   verified?: boolean;
   stack: string[];
+  collaborators: string[];
 };
 
 const projects: Project[] = [
@@ -146,6 +147,7 @@ const projects: Project[] = [
     contribution: 90,
     verified: true,
     stack: ["Web", "Frontend", "Deploy"],
+    collaborators: ["Mahnoor Naeem"],
   },
   {
     title: "Library Management System",
@@ -154,6 +156,7 @@ const projects: Project[] = [
     url: "https://github.com/mahnoornaeembaig-sketch/LIBRARY_MANAGEMENT_SYSTEM_C-",
     contribution: 100,
     stack: ["C", "Data Structures", "CLI"],
+    collaborators: ["Mahnoor Naeem"],
   },
   {
     title: "Flight Reservation System",
@@ -162,6 +165,28 @@ const projects: Project[] = [
     url: "https://github.com/mahnoornaeembaig-sketch/FLIGHT-RESERVATION-SYSTEM",
     contribution: 100,
     stack: ["C++", "OOP", "Systems"],
+    collaborators: ["Mahnoor Naeem"],
+  },
+];
+
+const skills = ["C", "C++", "Python", "SQL", "Object-Oriented Programming", "Data Structures"];
+
+type Testimonial = { name: string; role: string; quote: string; project?: string };
+
+const approvedTestimonials: Testimonial[] = [
+  {
+    name: "The Cheesecake Method",
+    role: "Client — Small Business Owner",
+    quote:
+      "Mahnoor delivered a polished, responsive site end-to-end. Communication was clear, revisions were quick, and the final result exceeded what I imagined.",
+    project: "The Cheesecake Method",
+  },
+  {
+    name: "Course Instructor",
+    role: "NED University",
+    quote:
+      "Her systems projects show real command of data structures and OOP — clean code, thoughtful architecture, and dependable delivery.",
+    project: "Library & Flight Systems",
   },
 ];
 

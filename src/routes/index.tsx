@@ -263,8 +263,8 @@ function Index() {
               <span>Available for engineering roles</span>
             </div>
 
-            <h1 className="font-serif text-5xl font-medium leading-[1.1] tracking-wide sm:text-6xl md:text-7xl lg:text-8xl">
-              <span style={{ color: "#E8CB8A" }}>Mahnoor Naeem</span>
+            <h1 className="font-serif text-5xl font-medium leading-[1.1] tracking-wide text-charcoal sm:text-6xl md:text-7xl lg:text-8xl">
+              <span style={{ color: "var(--charcoal)" }}>Mahnoor Naeem</span>
             </h1>
 
             <div className="mx-auto my-8 h-px w-40 gold-hairline" />

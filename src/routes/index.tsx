@@ -429,7 +429,7 @@ function Index() {
 
           <div className="mt-14 flex justify-center">
             <a
-              href="#contact"
+              href="#reviews"
               className="cta-glow inline-flex items-center gap-3 rounded-full border border-primary bg-transparent px-8 py-3.5 text-xs uppercase tracking-[0.28em] text-primary hover:bg-primary/15"
             >
               Submit Client Review

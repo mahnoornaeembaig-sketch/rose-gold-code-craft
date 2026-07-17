@@ -388,32 +388,50 @@ function Index() {
         <div className="mx-auto max-w-3xl">
           <div className="text-center">
             <SectionLabel n="IV.">Education</SectionLabel>
+            <h3 className="font-serif text-3xl font-normal md:text-4xl">
+              A journey through <span className="font-script text-primary">learning</span>.
+            </h3>
           </div>
-          <div className="relative mt-8">
-            <div className="absolute left-4 top-2 bottom-2 w-px bg-gradient-to-b from-primary via-primary/40 to-transparent" />
-            <div className="relative pl-14">
-              <div
-                className="absolute left-0 top-1 grid h-9 w-9 place-items-center rounded-full border border-primary"
-                style={{ background: "linear-gradient(135deg, #E8CB8A, var(--royal-gold))" }}
+
+          <ul className="mt-12 space-y-5">
+            {[
+              {
+                place: "NED University of Engineering & Technology",
+                detail: "Computer Systems Engineering — Batch 2025",
+                meta: "Undergraduate",
+              },
+              {
+                place: "BAMM P.E.C.H.S Govt College for Women",
+                detail: "Intermediate — Pre-Engineering",
+                meta: "Higher Secondary",
+              },
+              {
+                place: "St. Patrick's Girls High School",
+                detail: "Matriculation — Science",
+                meta: "Secondary",
+              },
+            ].map((e) => (
+              <li
+                key={e.place}
+                className="glass cta-glow relative flex items-start gap-5 rounded-2xl p-6 pl-14"
               >
-                <span className="font-serif text-sm text-[#2E0202]">✦</span>
-              </div>
-              <div className="text-[10px] uppercase tracking-[0.3em] text-primary">2022 — Present</div>
-              <h3 className="mt-3 font-serif text-2xl font-medium md:text-3xl">
-                B.E. in Computer Systems Engineering
-              </h3>
-              <p className="mt-2 font-serif italic text-lg text-parchment/80">
-                NED University of Engineering and Technology
-              </p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {["Systems", "Software", "Algorithms"].map((t) => (
-                  <span key={t} className="rounded-full border border-primary/40 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-parchment/75">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
+                <span
+                  className="absolute left-5 top-6 text-xl"
+                  style={{ filter: "drop-shadow(0 0 6px rgba(197,160,89,0.7))" }}
+                  aria-hidden
+                >
+                  ✨
+                </span>
+                <div className="flex-1">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-primary">{e.meta}</div>
+                  <div className="mt-2 font-serif text-lg font-medium md:text-xl">{e.place}</div>
+                  <p className="mt-1 font-serif italic text-sm text-parchment/80 md:text-base">
+                    {e.detail}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </Section>
 

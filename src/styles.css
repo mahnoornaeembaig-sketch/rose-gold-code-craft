@@ -42,40 +42,45 @@
 :root {
   --radius: 1rem;
 
-  /* Regal & Soft palette */
-  --royal-gold: #C5A059;
+  /* Soft rose & rose-gold palette */
+  --royal-gold: #B8894D;      /* deeper rose-gold for contrast on light bg */
   --velvet-rose: #B76E79;
-  --parchment: #FDF5E6;
-  --deep-wine: #4A0404;
-  --deep-wine-dark: #2E0202;
+  --rose-bg: #F8DDE3;
+  --rose-bg-soft: #FBEAEE;
+  --rose-bg-deep: #F0C4CE;
+  --charcoal: #2C2C2C;
+  --charcoal-soft: #4A4A4A;
+  --parchment: var(--charcoal);   /* legacy token now maps to dark text */
+  --deep-wine: var(--rose-bg);
+  --deep-wine-dark: var(--rose-bg-deep);
 
-  --background: var(--deep-wine);
-  --foreground: var(--parchment);
-  --card: rgba(253, 245, 230, 0.06);
-  --card-foreground: var(--parchment);
-  --popover: var(--deep-wine-dark);
-  --popover-foreground: var(--parchment);
+  --background: var(--rose-bg);
+  --foreground: var(--charcoal);
+  --card: rgba(255, 255, 255, 0.55);
+  --card-foreground: var(--charcoal);
+  --popover: #FFFFFF;
+  --popover-foreground: var(--charcoal);
   --primary: var(--royal-gold);
-  --primary-foreground: #2E0202;
+  --primary-foreground: #FFFFFF;
   --secondary: var(--velvet-rose);
-  --secondary-foreground: var(--parchment);
-  --muted: rgba(253, 245, 230, 0.08);
-  --muted-foreground: rgba(253, 245, 230, 0.72);
+  --secondary-foreground: #FFFFFF;
+  --muted: rgba(255, 255, 255, 0.6);
+  --muted-foreground: rgba(44, 44, 44, 0.7);
   --accent: var(--velvet-rose);
-  --accent-foreground: var(--parchment);
+  --accent-foreground: #FFFFFF;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: rgba(197, 160, 89, 0.35);
-  --input: rgba(253, 245, 230, 0.14);
+  --border: rgba(184, 137, 77, 0.4);
+  --input: rgba(44, 44, 44, 0.14);
   --ring: var(--royal-gold);
 }
 
 @layer base {
   * {
-    border-color: rgba(197, 160, 89, 0.35);
+    border-color: rgba(184, 137, 77, 0.4);
   }
   html, body {
-    background: radial-gradient(ellipse at top, #6B0808 0%, var(--deep-wine) 45%, var(--deep-wine-dark) 100%);
+    background: linear-gradient(180deg, var(--rose-bg-soft) 0%, var(--rose-bg) 50%, var(--rose-bg-deep) 100%);
     background-attachment: fixed;
     color: var(--foreground);
     font-family: var(--font-sans);
@@ -87,6 +92,7 @@
     font-family: var(--font-serif);
     letter-spacing: 0.02em;
     font-weight: 500;
+    color: var(--charcoal);
   }
   .font-serif { font-family: var(--font-serif); }
   .font-script { font-family: var(--font-script); }
@@ -126,15 +132,16 @@
 }
 
 @utility glass {
-  background: rgba(253, 245, 230, 0.06);
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(15px);
-  border: 1px solid rgba(197, 160, 89, 0.5);
+  border: 1px solid rgba(184, 137, 77, 0.4);
+  box-shadow: 0 10px 30px -18px rgba(74, 4, 4, 0.15);
 }
 
 @utility glass-strong {
-  background: rgba(74, 4, 4, 0.35);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(197, 160, 89, 0.4);
+  border: 1px solid rgba(184, 137, 77, 0.5);
 }
 
 @utility cta-glow {

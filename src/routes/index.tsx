@@ -135,6 +135,7 @@ type Project = {
   contribution: number;
   verified?: boolean;
   stack: string[];
+  collaborators: string[];
 };
 
 const projects: Project[] = [
@@ -146,6 +147,7 @@ const projects: Project[] = [
     contribution: 90,
     verified: true,
     stack: ["Web", "Frontend", "Deploy"],
+    collaborators: ["Mahnoor Naeem"],
   },
   {
     title: "Library Management System",
@@ -154,6 +156,7 @@ const projects: Project[] = [
     url: "https://github.com/mahnoornaeembaig-sketch/LIBRARY_MANAGEMENT_SYSTEM_C-",
     contribution: 100,
     stack: ["C", "Data Structures", "CLI"],
+    collaborators: ["Mahnoor Naeem"],
   },
   {
     title: "Flight Reservation System",
@@ -162,18 +165,46 @@ const projects: Project[] = [
     url: "https://github.com/mahnoornaeembaig-sketch/FLIGHT-RESERVATION-SYSTEM",
     contribution: 100,
     stack: ["C++", "OOP", "Systems"],
+    collaborators: ["Mahnoor Naeem"],
   },
 ];
 
 const skills = ["C", "C++", "Python", "SQL", "Object-Oriented Programming", "Data Structures"];
 
+type Testimonial = { name: string; role: string; quote: string; project?: string };
+
+const approvedTestimonials: Testimonial[] = [
+  {
+    name: "The Cheesecake Method",
+    role: "Client — Small Business Owner",
+    quote:
+      "Mahnoor delivered a polished, responsive site end-to-end. Communication was clear, revisions were quick, and the final result exceeded what I imagined.",
+    project: "The Cheesecake Method",
+  },
+  {
+    name: "Course Instructor",
+    role: "NED University",
+    quote:
+      "Her systems projects show real command of data structures and OOP — clean code, thoughtful architecture, and dependable delivery.",
+    project: "Library & Flight Systems",
+  },
+];
+
 function Index() {
   const [sent, setSent] = useState(false);
+  const [reviewSent, setReviewSent] = useState(false);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSent(true);
     setTimeout(() => setSent(false), 4000);
+    (e.currentTarget as HTMLFormElement).reset();
+  }
+
+  function onReviewSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setReviewSent(true);
+    setTimeout(() => setReviewSent(false), 4500);
     (e.currentTarget as HTMLFormElement).reset();
   }
 
@@ -196,6 +227,7 @@ function Index() {
               ["About", "#about"],
               ["Skills", "#skills"],
               ["Work", "#projects"],
+              ["Reviews", "#reviews"],
               ["Edu", "#education"],
               ["Contact", "#contact"],
             ].map(([label, href]) => (
@@ -232,8 +264,8 @@ function Index() {
               <span>Available for engineering roles</span>
             </div>
 
-            <h1 className="font-serif text-5xl font-medium leading-[1.1] tracking-wide sm:text-6xl md:text-7xl lg:text-8xl">
-              <span style={{ color: "#E8CB8A" }}>Mahnoor Naeem</span>
+            <h1 className="font-serif text-5xl font-medium leading-[1.1] tracking-wide text-charcoal sm:text-6xl md:text-7xl lg:text-8xl">
+              <span style={{ color: "var(--charcoal)" }}>Mahnoor Naeem</span>
             </h1>
 
             <div className="mx-auto my-8 h-px w-40 gold-hairline" />
@@ -364,7 +396,28 @@ function Index() {
                   </div>
                 </div>
                 <div>
-                  <ProgressBar value={p.contribution} label="Contribution" />
+                  <div className="mt-6 border-t border-primary/25 pt-5">
+                    <div className="text-[10px] uppercase tracking-[0.28em] text-parchment/60">
+                      Collaborators
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {p.collaborators.map((c) => (
+                        <span
+                          key={c}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-velvet-rose/60 bg-white/60 px-2.5 py-1 text-[10px] font-medium tracking-wide text-charcoal"
+                          style={{ color: "var(--charcoal)" }}
+                        >
+                          <span
+                            aria-hidden
+                            className="inline-block h-1.5 w-1.5 rounded-full"
+                            style={{ background: "var(--velvet-rose)" }}
+                          />
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <ProgressBar value={p.contribution} label="Based on total team commits" />
                   <div className="mt-6 flex items-center justify-between border-t border-primary/25 pt-4 text-[10px] uppercase tracking-[0.28em]">
                     <span className="text-parchment/70">Open Project</span>
                     <span className="text-primary transition-transform group-hover:translate-x-1">→</span>
@@ -376,7 +429,7 @@ function Index() {
 
           <div className="mt-14 flex justify-center">
             <a
-              href="#contact"
+              href="#reviews"
               className="cta-glow inline-flex items-center gap-3 rounded-full border border-primary bg-transparent px-8 py-3.5 text-xs uppercase tracking-[0.28em] text-primary hover:bg-primary/15"
             >
               Submit Client Review
@@ -438,11 +491,169 @@ function Index() {
         </div>
       </Section>
 
+      {/* Client Reviews */}
+      <Section id="reviews">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <SectionLabel n="V.">Client Reviews</SectionLabel>
+            <h2 className="mx-auto max-w-3xl font-serif text-4xl font-normal leading-tight md:text-5xl">
+              Kind words from <span className="font-script text-primary">people I've built for</span>.
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-base text-parchment/75 md:text-lg">
+              Real feedback from clients and collaborators. Submissions are reviewed before publishing.
+            </p>
+          </div>
+
+          {/* Approved testimonials grid */}
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {approvedTestimonials.map((t) => (
+              <figure
+                key={t.name}
+                className="glass cta-glow relative flex flex-col rounded-3xl p-8"
+              >
+                <span
+                  aria-hidden
+                  className="absolute left-6 top-4 font-serif text-6xl leading-none text-primary/40"
+                >
+                  “
+                </span>
+                <blockquote className="mt-6 font-serif text-base italic leading-relaxed text-parchment/85 md:text-lg">
+                  {t.quote}
+                </blockquote>
+                <figcaption className="mt-6 flex items-center gap-4 border-t border-primary/25 pt-4">
+                  <span
+                    className="grid h-10 w-10 place-items-center rounded-full font-serif text-sm"
+                    style={{
+                      background: "linear-gradient(135deg, var(--velvet-rose), var(--royal-gold))",
+                      color: "#FFFFFF",
+                    }}
+                    aria-hidden
+                  >
+                    {t.name.charAt(0)}
+                  </span>
+                  <div>
+                    <div className="font-serif text-base font-medium">{t.name}</div>
+                    <div className="text-[10px] uppercase tracking-[0.28em] text-parchment/60">
+                      {t.role}
+                      {t.project ? ` · ${t.project}` : ""}
+                    </div>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          {/* Submit-a-review form */}
+          <div className="mt-14 grid gap-6 lg:grid-cols-12">
+            <div className="glass rounded-3xl p-8 lg:col-span-4">
+              <div className="font-script text-3xl text-primary">Worked together?</div>
+              <p className="mt-3 text-sm text-parchment/80">
+                Share your experience. Submitted reviews are moderated and only published with your consent.
+              </p>
+              <ul className="mt-6 space-y-2 text-xs text-parchment/75">
+                <li>· Honest, specific feedback welcome</li>
+                <li>· Include the project we worked on</li>
+                <li>· Approval usually within a few days</li>
+              </ul>
+            </div>
+
+            <form
+              onSubmit={onReviewSubmit}
+              className="glass rounded-3xl p-8 lg:col-span-8"
+              aria-label="Submit a client review"
+            >
+              <div className="grid gap-5 md:grid-cols-2">
+                <label className="block">
+                  <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                    Your name
+                  </span>
+                  <input
+                    required
+                    name="reviewer-name"
+                    maxLength={100}
+                    className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
+                    style={{ color: "var(--charcoal)" }}
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                    Company / Role
+                  </span>
+                  <input
+                    name="reviewer-role"
+                    maxLength={120}
+                    className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
+                    style={{ color: "var(--charcoal)" }}
+                  />
+                </label>
+              </div>
+              <label className="mt-5 block">
+                <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                  Project we worked on
+                </span>
+                <input
+                  name="review-project"
+                  maxLength={120}
+                  className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
+                  style={{ color: "var(--charcoal)" }}
+                />
+              </label>
+              <label className="mt-5 block">
+                <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                  Your review
+                </span>
+                <textarea
+                  required
+                  name="review-message"
+                  rows={5}
+                  maxLength={1000}
+                  className="w-full resize-none rounded-2xl border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
+                  style={{ color: "var(--charcoal)" }}
+                />
+              </label>
+              <label className="mt-5 flex items-start gap-3 text-xs text-parchment/80">
+                <input
+                  type="checkbox"
+                  required
+                  name="review-consent"
+                  className="mt-1 h-4 w-4 rounded border-primary/50 accent-[color:var(--velvet-rose)]"
+                />
+                <span>
+                  I consent to my name and review being displayed publicly once approved.
+                </span>
+              </label>
+              <div className="mt-6 flex items-center justify-between gap-4">
+                <span
+                  className={`font-serif italic text-xs ${
+                    reviewSent ? "text-primary" : "text-parchment/60"
+                  }`}
+                >
+                  {reviewSent
+                    ? "✦ thank you — your review is pending approval"
+                    : "reviewed with care before publishing"}
+                </span>
+                <button
+                  type="submit"
+                  className="cta-glow inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-xs uppercase tracking-[0.28em]"
+                  style={{
+                    background: "linear-gradient(135deg, var(--velvet-rose) 0%, var(--royal-gold) 100%)",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Submit Review
+                  <span aria-hidden>→</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </Section>
+
       {/* Contact */}
       <Section id="contact" className="pb-16">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
-            <SectionLabel n="V.">Contact</SectionLabel>
+            <SectionLabel n="VI.">Contact</SectionLabel>
             <h2 className="mx-auto max-w-3xl font-serif text-4xl font-normal leading-tight md:text-6xl">
               Let's build <span className="font-script text-primary">something exquisite</span>.
             </h2>
@@ -481,20 +692,20 @@ function Index() {
               <div className="grid gap-5 md:grid-cols-2">
                 <label className="block">
                   <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">Name</span>
-                  <input required name="name" className="w-full rounded-full border border-primary/40 bg-parchment/5 px-4 py-3 text-sm text-parchment outline-none transition-colors focus:border-primary" />
+                  <input required name="name" className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary" />
                 </label>
                 <label className="block">
                   <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">Email</span>
-                  <input required type="email" name="email" className="w-full rounded-full border border-primary/40 bg-parchment/5 px-4 py-3 text-sm text-parchment outline-none transition-colors focus:border-primary" />
+                  <input required type="email" name="email" className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary" />
                 </label>
               </div>
               <label className="mt-5 block">
                 <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">Subject</span>
-                <input name="subject" className="w-full rounded-full border border-primary/40 bg-parchment/5 px-4 py-3 text-sm text-parchment outline-none transition-colors focus:border-primary" />
+                <input name="subject" className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary" />
               </label>
               <label className="mt-5 block">
                 <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">Message</span>
-                <textarea required name="message" rows={5} className="w-full resize-none rounded-2xl border border-primary/40 bg-parchment/5 px-4 py-3 text-sm text-parchment outline-none transition-colors focus:border-primary" />
+                <textarea required name="message" rows={5} className="w-full resize-none rounded-2xl border border-primary/40 bg-white/70 px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary" />
               </label>
               <div className="mt-6 flex items-center justify-between gap-4">
                 <span className={`font-serif italic text-xs ${sent ? "text-primary" : "text-parchment/60"}`}>

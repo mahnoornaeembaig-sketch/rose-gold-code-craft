@@ -490,11 +490,169 @@ function Index() {
         </div>
       </Section>
 
+      {/* Client Reviews */}
+      <Section id="reviews">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <SectionLabel n="V.">Client Reviews</SectionLabel>
+            <h2 className="mx-auto max-w-3xl font-serif text-4xl font-normal leading-tight md:text-5xl">
+              Kind words from <span className="font-script text-primary">people I've built for</span>.
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-base text-parchment/75 md:text-lg">
+              Real feedback from clients and collaborators. Submissions are reviewed before publishing.
+            </p>
+          </div>
+
+          {/* Approved testimonials grid */}
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {approvedTestimonials.map((t) => (
+              <figure
+                key={t.name}
+                className="glass cta-glow relative flex flex-col rounded-3xl p-8"
+              >
+                <span
+                  aria-hidden
+                  className="absolute left-6 top-4 font-serif text-6xl leading-none text-primary/40"
+                >
+                  “
+                </span>
+                <blockquote className="mt-6 font-serif text-base italic leading-relaxed text-parchment/85 md:text-lg">
+                  {t.quote}
+                </blockquote>
+                <figcaption className="mt-6 flex items-center gap-4 border-t border-primary/25 pt-4">
+                  <span
+                    className="grid h-10 w-10 place-items-center rounded-full font-serif text-sm"
+                    style={{
+                      background: "linear-gradient(135deg, var(--velvet-rose), var(--royal-gold))",
+                      color: "#FFFFFF",
+                    }}
+                    aria-hidden
+                  >
+                    {t.name.charAt(0)}
+                  </span>
+                  <div>
+                    <div className="font-serif text-base font-medium">{t.name}</div>
+                    <div className="text-[10px] uppercase tracking-[0.28em] text-parchment/60">
+                      {t.role}
+                      {t.project ? ` · ${t.project}` : ""}
+                    </div>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          {/* Submit-a-review form */}
+          <div className="mt-14 grid gap-6 lg:grid-cols-12">
+            <div className="glass rounded-3xl p-8 lg:col-span-4">
+              <div className="font-script text-3xl text-primary">Worked together?</div>
+              <p className="mt-3 text-sm text-parchment/80">
+                Share your experience. Submitted reviews are moderated and only published with your consent.
+              </p>
+              <ul className="mt-6 space-y-2 text-xs text-parchment/75">
+                <li>· Honest, specific feedback welcome</li>
+                <li>· Include the project we worked on</li>
+                <li>· Approval usually within a few days</li>
+              </ul>
+            </div>
+
+            <form
+              onSubmit={onReviewSubmit}
+              className="glass rounded-3xl p-8 lg:col-span-8"
+              aria-label="Submit a client review"
+            >
+              <div className="grid gap-5 md:grid-cols-2">
+                <label className="block">
+                  <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                    Your name
+                  </span>
+                  <input
+                    required
+                    name="reviewer-name"
+                    maxLength={100}
+                    className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-primary"
+                    style={{ color: "var(--charcoal)" }}
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                    Company / Role
+                  </span>
+                  <input
+                    name="reviewer-role"
+                    maxLength={120}
+                    className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-primary"
+                    style={{ color: "var(--charcoal)" }}
+                  />
+                </label>
+              </div>
+              <label className="mt-5 block">
+                <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                  Project we worked on
+                </span>
+                <input
+                  name="review-project"
+                  maxLength={120}
+                  className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-primary"
+                  style={{ color: "var(--charcoal)" }}
+                />
+              </label>
+              <label className="mt-5 block">
+                <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">
+                  Your review
+                </span>
+                <textarea
+                  required
+                  name="review-message"
+                  rows={5}
+                  maxLength={1000}
+                  className="w-full resize-none rounded-2xl border border-primary/40 bg-white/70 px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-primary"
+                  style={{ color: "var(--charcoal)" }}
+                />
+              </label>
+              <label className="mt-5 flex items-start gap-3 text-xs text-parchment/80">
+                <input
+                  type="checkbox"
+                  required
+                  name="review-consent"
+                  className="mt-1 h-4 w-4 rounded border-primary/50 accent-[color:var(--velvet-rose)]"
+                />
+                <span>
+                  I consent to my name and review being displayed publicly once approved.
+                </span>
+              </label>
+              <div className="mt-6 flex items-center justify-between gap-4">
+                <span
+                  className={`font-serif italic text-xs ${
+                    reviewSent ? "text-primary" : "text-parchment/60"
+                  }`}
+                >
+                  {reviewSent
+                    ? "✦ thank you — your review is pending approval"
+                    : "reviewed with care before publishing"}
+                </span>
+                <button
+                  type="submit"
+                  className="cta-glow inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-xs uppercase tracking-[0.28em]"
+                  style={{
+                    background: "linear-gradient(135deg, var(--velvet-rose) 0%, var(--royal-gold) 100%)",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Submit Review
+                  <span aria-hidden>→</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </Section>
+
       {/* Contact */}
       <Section id="contact" className="pb-16">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
-            <SectionLabel n="V.">Contact</SectionLabel>
+            <SectionLabel n="VI.">Contact</SectionLabel>
             <h2 className="mx-auto max-w-3xl font-serif text-4xl font-normal leading-tight md:text-6xl">
               Let's build <span className="font-script text-primary">something exquisite</span>.
             </h2>

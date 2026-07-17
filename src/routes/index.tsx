@@ -395,7 +395,28 @@ function Index() {
                   </div>
                 </div>
                 <div>
-                  <ProgressBar value={p.contribution} label="Contribution" />
+                  <div className="mt-6 border-t border-primary/25 pt-5">
+                    <div className="text-[10px] uppercase tracking-[0.28em] text-parchment/60">
+                      Collaborators
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {p.collaborators.map((c) => (
+                        <span
+                          key={c}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-velvet-rose/60 bg-white/60 px-2.5 py-1 text-[10px] font-medium tracking-wide text-charcoal"
+                          style={{ color: "var(--charcoal)" }}
+                        >
+                          <span
+                            aria-hidden
+                            className="inline-block h-1.5 w-1.5 rounded-full"
+                            style={{ background: "var(--velvet-rose)" }}
+                          />
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <ProgressBar value={p.contribution} label="Based on total team commits" />
                   <div className="mt-6 flex items-center justify-between border-t border-primary/25 pt-4 text-[10px] uppercase tracking-[0.28em]">
                     <span className="text-parchment/70">Open Project</span>
                     <span className="text-primary transition-transform group-hover:translate-x-1">→</span>

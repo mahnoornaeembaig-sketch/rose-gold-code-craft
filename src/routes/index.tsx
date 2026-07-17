@@ -227,6 +227,7 @@ function Index() {
               ["About", "#about"],
               ["Skills", "#skills"],
               ["Work", "#projects"],
+              ["Reviews", "#reviews"],
               ["Edu", "#education"],
               ["Contact", "#contact"],
             ].map(([label, href]) => (

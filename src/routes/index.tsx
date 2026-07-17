@@ -692,20 +692,20 @@ function Index() {
               <div className="grid gap-5 md:grid-cols-2">
                 <label className="block">
                   <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">Name</span>
-                  <input required name="name" className="w-full rounded-full border border-primary/40 bg-parchment/5 px-4 py-3 text-sm text-parchment outline-none transition-colors focus:border-primary" />
+                  <input required name="name" className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-primary" />
                 </label>
                 <label className="block">
                   <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">Email</span>
-                  <input required type="email" name="email" className="w-full rounded-full border border-primary/40 bg-parchment/5 px-4 py-3 text-sm text-parchment outline-none transition-colors focus:border-primary" />
+                  <input required type="email" name="email" className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-primary" />
                 </label>
               </div>
               <label className="mt-5 block">
                 <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">Subject</span>
-                <input name="subject" className="w-full rounded-full border border-primary/40 bg-parchment/5 px-4 py-3 text-sm text-parchment outline-none transition-colors focus:border-primary" />
+                <input name="subject" className="w-full rounded-full border border-primary/40 bg-white/70 px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-primary" />
               </label>
               <label className="mt-5 block">
                 <span className="mb-2 block text-[10px] uppercase tracking-[0.28em] text-parchment/70">Message</span>
-                <textarea required name="message" rows={5} className="w-full resize-none rounded-2xl border border-primary/40 bg-parchment/5 px-4 py-3 text-sm text-parchment outline-none transition-colors focus:border-primary" />
+                <textarea required name="message" rows={5} className="w-full resize-none rounded-2xl border border-primary/40 bg-white/70 px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-primary" />
               </label>
               <div className="mt-6 flex items-center justify-between gap-4">
                 <span className={`font-serif italic text-xs ${sent ? "text-primary" : "text-parchment/60"}`}>
